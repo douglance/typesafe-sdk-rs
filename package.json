@@ -1,0 +1,17 @@
+{
+  "name": "@typesafe-ai/sdk",
+  "version": "0.0.0-bootstrap.0",
+  "description": "Placeholder for the TypeSafe JavaScript and TypeScript SDK; not a functional SDK.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/typesafe-ai/typesafe-sdk-js.git"
+  },
+  "homepage": "https://docs.typesafe.ai",
+  "files": ["README.md", "LICENSE"],
+  "publishConfig": {
+    "access": "public",
+    "tag": "bootstrap",
+    "provenance": true
+  }
+}
