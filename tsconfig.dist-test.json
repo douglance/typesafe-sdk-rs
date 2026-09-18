@@ -1,6 +1,0 @@
-{
-  // Type-checks the dist smoke tests against the built declaration files, not the sources.
-  "extends": "./tsconfig.json",
-  "include": ["test/dist"],
-  "exclude": []
-}
