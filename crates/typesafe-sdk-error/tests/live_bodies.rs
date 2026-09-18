@@ -4,6 +4,13 @@
 //! these assertions describe what the service actually returns. A hand-written
 //! fixture would only prove the code agrees with itself.
 
+#![allow(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    clippy::panic,
+    reason = "a test that cannot fail loudly is not a test"
+)]
+
 use typesafe_sdk_error::{ApiErrorKind, Body, Error};
 use typesafe_sdk_headers::Headers;
 

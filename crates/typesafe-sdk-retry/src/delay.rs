@@ -13,16 +13,25 @@ use crate::policy::RetryPolicy;
 /// A source of randomness in `[0, 1)`, injected so delays are testable.
 pub type Random<'a> = &'a dyn Fn() -> f64;
 
-/// Milliseconds to wait before the zero-based `attempt`.
+/// Everything the delay for one attempt depends on.
+pub struct Wait<'a> {
+    /// Zero-based retry number.
+    pub attempt: u32,
+    /// Response headers, when the attempt failed with a response.
+    pub headers: Option<&'a Headers>,
+    /// The policy in force for this request.
+    pub policy: &'a RetryPolicy,
+    /// Randomness for jitter.
+    pub random: Random<'a>,
+    /// Unix epoch milliseconds, for resolving a `Retry-After` date.
+    pub now_ms: i64,
+}
+
+/// Milliseconds to wait before the next attempt.
 #[must_use]
-pub fn delay_ms(
-    attempt: u32,
-    headers: Option<&Headers>,
-    policy: &RetryPolicy,
-    random: Random<'_>,
-    now_ms: i64,
-) -> u64 {
-    server_delay(headers, policy, now_ms).unwrap_or_else(|| backoff(attempt, policy, random))
+pub fn delay_ms(wait: &Wait<'_>) -> u64 {
+    server_delay(wait.headers, wait.policy, wait.now_ms)
+        .unwrap_or_else(|| backoff(wait.attempt, wait.policy, wait.random))
 }
 
 /// The server's own delay, when it asked for one the policy will accept.
@@ -41,7 +50,10 @@ fn backoff(attempt: u32, policy: &RetryPolicy, random: Random<'_>) -> u64 {
         .checked_shl(attempt)
         .unwrap_or(u64::MAX);
     let exponential = doubled.min(policy.backoff_max_ms);
-    let scale = 1.0 - random().clamp(0.0, 1.0) * policy.backoff_jitter;
+    // Reads as `1 - r * jitter`; written fused so the rounding is exact.
+    let scale = random()
+        .clamp(0.0, 1.0)
+        .mul_add(-policy.backoff_jitter, 1.0);
     #[expect(
         clippy::cast_precision_loss,
         clippy::cast_possible_truncation,

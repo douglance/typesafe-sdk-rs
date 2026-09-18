@@ -12,6 +12,7 @@ mod describe;
 
 pub use api::{ApiError, ApiErrorKind};
 pub use body::Body;
+pub use describe::describe;
 
 use typesafe_sdk_headers::Headers;
 
@@ -19,8 +20,11 @@ use typesafe_sdk_headers::Headers;
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// The API returned a non-2xx response.
+    ///
+    /// Boxed because it carries the headers and body, and a `Result` should not
+    /// pay for the failure path on every success.
     #[error("{0}")]
-    Api(#[from] ApiError),
+    Api(Box<ApiError>),
 
     /// The request or its response body could not be delivered.
     #[error("{message}")]
@@ -68,7 +72,7 @@ impl Error {
     /// Builds the right variant for an HTTP status.
     #[must_use]
     pub fn from_response(status: u16, body: Body, headers: &Headers) -> Self {
-        Self::Api(ApiError::from_response(status, body, headers))
+        Self::Api(Box::new(ApiError::from_response(status, body, headers)))
     }
 
     /// The HTTP status, when this came from a response.
@@ -102,6 +106,12 @@ impl Error {
             Self::Api(error) => Some(error),
             _ => None,
         }
+    }
+}
+
+impl From<ApiError> for Error {
+    fn from(error: ApiError) -> Self {
+        Self::Api(Box::new(error))
     }
 }
 

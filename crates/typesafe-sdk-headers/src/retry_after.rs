@@ -45,17 +45,23 @@ fn httpdate_ms(raw: &str) -> Option<i64> {
     i64::try_from(since.as_millis()).ok()
 }
 
+/// A delay beyond this is meaningless, and clamping keeps the conversion below
+/// exact rather than implementation-defined.
+const CEILING: f64 = 1e15;
+
 /// JavaScript's `Number` is a double; matching it keeps fractional seconds exact.
 fn round_to_u64(value: f64) -> u64 {
     if value <= 0.0 {
         return 0;
     }
-    let rounded = value.round();
-    if rounded >= u64::MAX as f64 {
-        u64::MAX
-    } else {
-        rounded as u64
-    }
+    let rounded = value.round().min(CEILING);
+    #[expect(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        reason = "clamped to a positive value well inside u64 and f64's exact range"
+    )]
+    let milliseconds = rounded as u64;
+    milliseconds
 }
 
 #[cfg(test)]

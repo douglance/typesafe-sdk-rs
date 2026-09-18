@@ -25,6 +25,7 @@ pub fn describe() -> &'static str {
 }
 
 #[cfg(test)]
+#[allow(clippy::panic, reason = "a test that cannot fail loudly is not a test")]
 mod tests {
     use super::describe;
 

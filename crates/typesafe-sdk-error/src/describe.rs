@@ -14,7 +14,7 @@ const MAX_RAW_BODY: usize = 200;
 
 /// The full error message for a status and body.
 #[must_use]
-pub(crate) fn describe(status: u16, body: &Body) -> String {
+pub fn describe(status: u16, body: &Body) -> String {
     if let Some(detail) = extract_message(body) {
         return format!("{status} {detail}");
     }

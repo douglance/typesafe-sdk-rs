@@ -38,10 +38,10 @@ fn redact_key(value: &str) -> String {
     } else {
         String::new()
     };
-    match scheme {
-        Some(scheme) => format!("{scheme} ***{tail}"),
-        None => format!("***{tail}"),
-    }
+    scheme.map_or_else(
+        || format!("***{tail}"),
+        |scheme| format!("{scheme} ***{tail}"),
+    )
 }
 
 /// Splits `Bearer sk_live_…` into its scheme and secret; a bare secret has none.

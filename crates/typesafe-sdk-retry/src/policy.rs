@@ -67,11 +67,12 @@ impl RetryPolicy {
     #[must_use]
     pub fn retries_error(&self, error: &Error) -> bool {
         match error {
-            Error::UserAbort { .. } => false,
             Error::Timeout { .. } => self.api_timeout_error,
             Error::Connection { .. } => self.api_connection_error,
             Error::Api(api) => self.retries_status(api.status),
-            Error::Invalid(_) => false,
+            // A cancelled request has no result to wait for, and a rejected
+            // one never reached the network. Neither improves on a second try.
+            Error::UserAbort { .. } | Error::Invalid(_) => false,
         }
     }
 
