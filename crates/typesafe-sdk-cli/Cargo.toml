@@ -16,7 +16,7 @@ name = "typesafe"
 path = "src/main.rs"
 
 [dependencies]
-incurs = { workspace = true, features = ["mcp"] }
+incurs = { workspace = true, features = ["mcp", "yaml"] }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 typesafe-sdk-cmd-ask.workspace = true
 typesafe-sdk-cmd-doctor.workspace = true
