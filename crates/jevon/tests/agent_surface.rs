@@ -14,7 +14,7 @@
     reason = "serve_to writes through a non-Send &mut dyn Write, as the binary does"
 )]
 
-use typesafe_sdk_cli::build_cli;
+use jevon::build_cli;
 
 /// Runs the CLI in agent mode and returns its exit code and stdout.
 async fn observe(argv: &[&str]) -> (Option<i32>, String) {

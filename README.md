@@ -8,7 +8,7 @@ instead of a string you have to parse.
 ## Quickstart
 
 ```sh
-cargo install --path crates/typesafe-sdk-cli --bin jev
+cargo install jevon
 export TYPESAFE_API_KEY=...
 jev ask "I was charged twice, please fix this" \
   --noul "What is this ticket about?" --choice billing --choice technical
@@ -95,7 +95,7 @@ build.
 3  http · config
 4  client                                   the SDK
 5  cmd-kit · cmd-ask · cmd-models · cmd-doctor
-6  cli · tests
+6  jevon (cli) · tests
 ```
 
 ## Development
