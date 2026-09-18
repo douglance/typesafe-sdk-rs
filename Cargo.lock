@@ -1212,6 +1212,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "typesafe-sdk-cmd-ask",
+ "typesafe-sdk-cmd-classify",
  "typesafe-sdk-cmd-doctor",
  "typesafe-sdk-cmd-models",
 ]
@@ -2723,6 +2724,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "typesafe-sdk-cmd-classify"
+version = "0.6.0"
+dependencies = [
+ "futures",
+ "incurs",
+ "indexmap",
+ "schemars",
+ "serde",
+ "serde_json",
+ "typesafe-sdk-answers",
+ "typesafe-sdk-client",
+ "typesafe-sdk-cmd-kit",
+ "typesafe-sdk-error",
+ "typesafe-sdk-questions",
+]
+
+[[package]]
 name = "typesafe-sdk-cmd-doctor"
 version = "0.6.0"
 dependencies = [
@@ -2741,12 +2759,14 @@ name = "typesafe-sdk-cmd-kit"
 version = "0.6.0"
 dependencies = [
  "incurs",
+ "serde_json",
  "typesafe-sdk-client",
  "typesafe-sdk-config",
  "typesafe-sdk-env",
  "typesafe-sdk-error",
  "typesafe-sdk-headers",
  "typesafe-sdk-http",
+ "typesafe-sdk-questions",
 ]
 
 [[package]]
