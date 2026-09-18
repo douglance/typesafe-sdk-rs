@@ -4,14 +4,36 @@ use typesafe_sdk_config::Config;
 use typesafe_sdk_error::{Body, Error, Result};
 use typesafe_sdk_http::{RawResponse, Request, Transport};
 use typesafe_sdk_log::Level;
-use typesafe_sdk_retry::{Wait, delay_ms};
+use typesafe_sdk_retry::{RetryPolicy, Wait, delay_ms};
 
 /// How one attempt ended.
 enum Outcome {
     /// Finished, either with a response to return or an error to raise.
     Done(Result<RawResponse>),
     /// Worth trying again; carries the delay and why.
-    Again { delay: u64, reason: String },
+    Again {
+        /// Milliseconds to wait first.
+        delay: u64,
+        /// What went wrong, for the log line.
+        reason: String,
+    },
+}
+
+/// What one request is being sent under.
+pub(crate) struct Plan<'a> {
+    /// The client's settings, for logging.
+    pub(crate) config: &'a Config,
+    /// The policy in force, which may be a per-call override.
+    pub(crate) policy: &'a RetryPolicy,
+    /// How this request is named in the log.
+    pub(crate) tag: &'a str,
+}
+
+/// Where one attempt sits: its policy, its number, and whether it is the last.
+struct At<'a> {
+    policy: &'a RetryPolicy,
+    attempt: u32,
+    exhausted: bool,
 }
 
 /// Sends `build(attempt)` until it succeeds or the policy gives up.
@@ -20,88 +42,90 @@ enum Outcome {
 /// Returns the last error when every attempt is exhausted.
 pub(crate) async fn run(
     transport: &dyn Transport,
-    config: &Config,
-    tag: &str,
+    plan: &Plan<'_>,
     build: impl Fn(u32) -> Request,
 ) -> Result<RawResponse> {
     let mut last: Result<RawResponse> = Err(Error::Invalid("no attempt was made".to_owned()));
 
-    for attempt in 0..=config.retry.max_retries {
-        let sent = transport.send(build(attempt)).await;
-        match classify(config, attempt, sent) {
+    for attempt in 0..=plan.policy.max_retries {
+        let at = At {
+            policy: plan.policy,
+            attempt,
+            exhausted: attempt >= plan.policy.max_retries,
+        };
+        match classify(&at, transport.send(build(attempt)).await) {
             Outcome::Done(result) => return result,
             Outcome::Again { delay, reason } => {
                 announce(
-                    config,
-                    tag,
-                    &Retrying {
-                        attempt,
+                    plan,
+                    &at,
+                    &Report {
                         delay,
                         reason: &reason,
                     },
                 );
                 last = Err(Error::Invalid(reason));
-                tokio::time::sleep(std::time::Duration::from_millis(delay)).await;
+                pause(delay).await;
             }
         }
     }
     last
 }
 
-/// One decision to try again.
-struct Retrying<'a> {
-    attempt: u32,
+/// Waits before the next attempt.
+async fn pause(delay: u64) {
+    tokio::time::sleep(std::time::Duration::from_millis(delay)).await;
+}
+
+/// What to say about a retry.
+struct Report<'a> {
     delay: u64,
     reason: &'a str,
 }
 
 /// Reports that the request will be tried again, and why.
-fn announce(config: &Config, tag: &str, retrying: &Retrying<'_>) {
-    let Retrying {
-        attempt,
-        delay,
-        reason,
-    } = *retrying;
-    config.logger.log(Level::Info, || {
+fn announce(plan: &Plan<'_>, at: &At<'_>, report: &Report<'_>) {
+    let Report { delay, reason } = *report;
+    let tag = plan.tag;
+    plan.config.logger.log(Level::Info, || {
         format!(
             "{tag} retrying in {delay}ms (retry {}/{}) after {reason}",
-            attempt + 1,
-            config.retry.max_retries
+            at.attempt + 1,
+            at.policy.max_retries
         )
     });
 }
 
 /// Decides whether an attempt's result ends the request or earns another try.
-fn classify(config: &Config, attempt: u32, sent: Result<RawResponse>) -> Outcome {
-    let exhausted = attempt >= config.retry.max_retries;
+fn classify(at: &At<'_>, sent: Result<RawResponse>) -> Outcome {
     match sent {
-        Ok(response) => from_response(config, attempt, exhausted, response),
-        Err(error) => from_error(config, attempt, exhausted, error),
+        Ok(response) => from_response(at, response),
+        Err(error) => from_error(at, error),
     }
 }
 
 /// A response arrived; its status decides.
-fn from_response(config: &Config, attempt: u32, exhausted: bool, response: RawResponse) -> Outcome {
+fn from_response(at: &At<'_>, response: RawResponse) -> Outcome {
     if response.is_success() {
         return Outcome::Done(Ok(response));
     }
-    if exhausted || !config.retry.retries_status(response.status) {
+    if at.exhausted || !at.policy.retries_status(response.status) {
         return Outcome::Done(Err(failure(&response)));
     }
     Outcome::Again {
-        delay: wait_for(config, attempt, Some(&response)),
+        delay: wait_for(at, Some(&response)),
         reason: response.status.to_string(),
     }
 }
 
 /// Nothing arrived; the failure decides.
-fn from_error(config: &Config, attempt: u32, exhausted: bool, error: Error) -> Outcome {
-    if exhausted || !config.retry.retries_error(&error) {
+fn from_error(at: &At<'_>, error: Error) -> Outcome {
+    if at.exhausted || !at.policy.retries_error(&error) {
         return Outcome::Done(Err(error));
     }
     let reason = error.to_string();
     Outcome::Again {
-        delay: wait_for(config, attempt, None),
+        delay: wait_for(at, None),
         reason,
     }
 }
@@ -115,11 +139,11 @@ fn failure(response: &RawResponse) -> Error {
     )
 }
 
-fn wait_for(config: &Config, attempt: u32, response: Option<&RawResponse>) -> u64 {
+fn wait_for(at: &At<'_>, response: Option<&RawResponse>) -> u64 {
     delay_ms(&Wait {
-        attempt,
+        attempt: at.attempt,
         headers: response.map(|r| &r.headers),
-        policy: &config.retry,
+        policy: at.policy,
         random: &rand_unit,
         now_ms: now_ms(),
     })
@@ -128,7 +152,7 @@ fn wait_for(config: &Config, attempt: u32, response: Option<&RawResponse>) -> u6
 /// A cheap uniform value in `[0, 1)`.
 ///
 /// Jitter only has to decorrelate concurrent clients, so the system clock's low
-/// bits are sufficient and avoid a dependency for it.
+/// bits are enough and avoid taking a dependency for it.
 fn rand_unit() -> f64 {
     let nanos = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
