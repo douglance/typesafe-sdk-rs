@@ -1,4 +1,11 @@
 //! The TypeSafe client.
+//!
+//! Three guarantees hold across every call here. The SDK's own headers are
+//! written last, so a caller cannot replace `Authorization` or forge the retry
+//! count. A question set is checked before anything is sent, so a malformed one
+//! costs no round trip. And the per-attempt timeout covers the full response
+//! body, not just the headers, so a server that stalls mid-body times out
+//! rather than hanging.
 
 mod attempt;
 mod client;

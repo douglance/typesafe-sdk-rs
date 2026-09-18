@@ -1,4 +1,9 @@
 //! Where log lines go.
+//!
+//! Filtering happens in the wrapper rather than at each call site, so a sink
+//! can never be handed a line it was configured not to want. The message is
+//! built behind a closure for the same reason: at the default level, formatting
+//! a debug line is work nobody asked for.
 
 use std::sync::{Arc, Mutex};
 

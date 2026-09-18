@@ -1,4 +1,10 @@
 //! The client itself.
+//!
+//! Each call comes in two forms: a short one returning just the answer, and a
+//! `_with` one taking per-call overrides and returning the response metadata
+//! too. The short form is what almost every caller wants; the long form exists
+//! because a request id is what support needs to find one call in the service's
+//! logs, and that must be reachable on success rather than only on failure.
 
 use std::sync::Arc;
 

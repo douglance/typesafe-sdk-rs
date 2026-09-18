@@ -1,4 +1,8 @@
 //! What came back in a response body.
+//!
+//! The content type is deliberately ignored. Services mislabel error pages, and
+//! a body that parses as JSON is more useful parsed whatever it claims to be —
+//! so the only distinction kept is between absent, parsed, and quoted verbatim.
 
 use serde_json::Value;
 

@@ -1,4 +1,8 @@
 //! A non-2xx response, classified.
+//!
+//! Anything unrecognised stays `Other` rather than being folded into a
+//! neighbour, so a status the API starts returning shows up as itself instead
+//! of quietly being reported as something it is not.
 
 use typesafe_sdk_headers::{Headers, parse_retry_after};
 

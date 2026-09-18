@@ -1,4 +1,8 @@
 //! What may appear as instructions, state, or a criterion description.
+//!
+//! The API accepts rich JSON anywhere it accepts a description, so a criterion
+//! can carry structure rather than a sentence — and `null` is a real value
+//! meaning "this label needs no description", not a missing one.
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;

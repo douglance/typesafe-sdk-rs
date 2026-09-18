@@ -1,4 +1,9 @@
 //! How much the SDK says.
+//!
+//! Nothing here is ever emitted above `info`. A failed request is returned to
+//! the caller, and logging it as well would report someone else's decision
+//! twice — which is why the default level of `warn` leaves a healthy client
+//! completely silent.
 
 use typesafe_sdk_error::{Error, Result};
 

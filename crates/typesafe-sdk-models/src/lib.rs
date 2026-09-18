@@ -1,4 +1,8 @@
 //! Model cards and the models listing.
+//!
+//! Unwrapping is fallible on purpose. A malformed response and an account with
+//! no models would otherwise both arrive as an empty list, and only one of
+//! those is worth waking someone for.
 
 use serde::{Deserialize, Serialize};
 use typesafe_sdk_error::{Error, Result};

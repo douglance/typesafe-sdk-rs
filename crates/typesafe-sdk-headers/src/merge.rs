@@ -1,4 +1,10 @@
 //! The header map itself.
+//!
+//! Ordinary maps get two things wrong for HTTP. Names compare
+//! case-insensitively, but the spelling the last writer used is what should
+//! reach the wire. And "remove this header" is a different instruction from
+//! "set it to empty" — the client relies on the difference to keep a
+//! `Content-Type` off a request that has no body.
 
 use indexmap::IndexMap;
 

@@ -1,4 +1,9 @@
 //! The System One request body.
+//!
+//! The JavaScript SDK spreads the caller's whole object onto the wire, so a
+//! field it does not model still reaches the service. That is worth copying:
+//! dropping unknown fields would make this SDK the reason a new API option
+//! could not be used until someone cut a release.
 
 use indexmap::IndexMap;
 use serde::Serialize;
