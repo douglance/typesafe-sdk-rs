@@ -8,8 +8,9 @@ instead of a string you have to parse.
 ## Quickstart
 
 ```sh
+cargo install --path crates/typesafe-sdk-cli --bin jev
 export TYPESAFE_API_KEY=...
-cargo run -p typesafe-sdk-cli -- ask "I was charged twice, please fix this" \
+jev ask "I was charged twice, please fix this" \
   --noul "What is this ticket about?" --choice billing --choice technical
 ```
 
@@ -65,14 +66,21 @@ match Ticket::answers(&response)?.category {
 | `TYPESAFE_LOG_LEVEL` | `warn` | `debug`, `info`, `warn`, `error`, `off`. |
 
 An explicit argument wins over the environment, which wins over the default. A
-variable set to whitespace counts as unset. Run `typesafe doctor` to see what
-resolved and what is missing.
+variable set to whitespace counts as unset. Run `jev doctor` to see what resolved and what is missing.
 
 Requests retry twice by default, on 408, 429 and 5xx as well as connection
 failures and timeouts, with exponential backoff from 500ms to a 5s cap. A
 server's `Retry-After` is honoured exactly when it asks for a minute or less.
 The 10s timeout applies per attempt and covers the full response body, not just
 the headers.
+
+## Agents
+
+`jev mcp add` registers the binary as an MCP server and `jev skills add` writes
+a skill per command. Both default to global. The MCP entry carries no
+environment, so the agent must already have `TYPESAFE_API_KEY` in scope —
+deliberately, because a key does not belong in an agent config file. Without
+one every call returns "No API key was provided" rather than failing obscurely.
 
 ## Layout
 

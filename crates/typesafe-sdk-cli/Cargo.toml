@@ -12,6 +12,11 @@ categories.workspace = true
 description = "The `typesafe` command-line interface."
 
 [[bin]]
+name = "jev"
+path = "src/main.rs"
+
+# The former name, kept so anything already written against it keeps working.
+[[bin]]
 name = "typesafe"
 path = "src/main.rs"
 

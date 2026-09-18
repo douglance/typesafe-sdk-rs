@@ -66,18 +66,6 @@ async fn commands_that_reach_the_network_say_so() {
     assert_eq!(open_world("doctor"), Some(false));
 }
 
-/// A config file can supply option defaults, and its shape is published.
-#[tokio::test]
-async fn the_config_file_schema_is_published() {
-    let (exit, out) = observe(&["--config-schema", "--json"]).await;
-    assert_eq!(exit, None);
-    let schema: serde_json::Value = serde_json::from_str(&out).unwrap();
-    assert!(
-        !schema["properties"]["commands"].is_null(),
-        "no command tree in the config schema:\n{out}"
-    );
-}
-
 /// `--format yaml` must emit YAML, not silently fall back to JSON.
 #[tokio::test]
 async fn yaml_output_is_actually_yaml() {
@@ -86,4 +74,20 @@ async fn yaml_output_is_actually_yaml() {
         out.starts_with("authenticated:"),
         "expected YAML, got:\n{out}"
     );
+}
+
+/// Token budgeting is what an agent uses to stay inside a context window, so
+/// these must keep working. Declaring config files in incurs 0.7.0 silently
+/// breaks them; see douglance/incurs fix/config-flag-swallows-builtins.
+#[tokio::test]
+async fn the_token_budgeting_flags_are_reachable() {
+    for argv in [
+        vec!["doctor", "--token-count"],
+        vec!["doctor", "--token-limit", "50"],
+        vec!["doctor", "--token-offset", "1"],
+        vec!["doctor", "--filter-output", "base_url"],
+    ] {
+        let (exit, _) = observe(&argv).await;
+        assert_eq!(exit, None, "{argv:?} was rejected");
+    }
 }
