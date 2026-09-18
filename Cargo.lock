@@ -2761,6 +2761,11 @@ dependencies = [
 [[package]]
 name = "typesafe-sdk-derive"
 version = "0.6.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
+]
 
 [[package]]
 name = "typesafe-sdk-env"
@@ -2842,7 +2847,9 @@ dependencies = [
  "typesafe-sdk-answers",
  "typesafe-sdk-client",
  "typesafe-sdk-config",
+ "typesafe-sdk-derive",
  "typesafe-sdk-env",
+ "typesafe-sdk-error",
  "typesafe-sdk-http",
  "typesafe-sdk-questions",
 ]
