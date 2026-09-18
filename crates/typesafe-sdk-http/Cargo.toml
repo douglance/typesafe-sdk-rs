@@ -18,5 +18,8 @@ tokio.workspace = true
 typesafe-sdk-error.workspace = true
 typesafe-sdk-headers.workspace = true
 
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
+
 [lints]
 workspace = true
