@@ -13,6 +13,7 @@ description = "The retry policy, backoff and Retry-After parsing."
 
 [dependencies]
 typesafe-sdk-error.workspace = true
+typesafe-sdk-headers.workspace = true
 
 [lints]
 workspace = true

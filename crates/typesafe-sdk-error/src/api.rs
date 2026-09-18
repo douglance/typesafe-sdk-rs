@@ -33,20 +33,30 @@ pub enum ApiErrorKind {
     Other,
 }
 
+/// Statuses the API gives a distinct meaning, as data rather than branches.
+const MAPPED: &[(u16, ApiErrorKind)] = &[
+    (400, ApiErrorKind::BadRequest),
+    (401, ApiErrorKind::Authentication),
+    (403, ApiErrorKind::PermissionDenied),
+    (404, ApiErrorKind::NotFound),
+    (422, ApiErrorKind::UnprocessableEntity),
+    (429, ApiErrorKind::RateLimit),
+];
+
 impl ApiErrorKind {
     /// Classifies an HTTP status exactly as the JS SDK does.
+    ///
+    /// Note the 5xx test has no upper bound, so a nonstandard 6xx status still
+    /// reads as a server failure. That is the JS behaviour, kept deliberately.
     #[must_use]
-    pub const fn of(status: u16) -> Self {
-        match status {
-            400 => Self::BadRequest,
-            401 => Self::Authentication,
-            403 => Self::PermissionDenied,
-            404 => Self::NotFound,
-            422 => Self::UnprocessableEntity,
-            429 => Self::RateLimit,
-            _ if status >= 500 => Self::InternalServer,
-            _ => Self::Other,
+    pub fn of(status: u16) -> Self {
+        if let Some(&(_, kind)) = MAPPED.iter().find(|&&(code, _)| code == status) {
+            return kind;
         }
+        if status >= 500 {
+            return Self::InternalServer;
+        }
+        Self::Other
     }
 }
 

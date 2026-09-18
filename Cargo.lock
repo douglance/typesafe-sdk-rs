@@ -345,6 +345,7 @@ name = "typesafe-sdk-retry"
 version = "0.6.0"
 dependencies = [
  "typesafe-sdk-error",
+ "typesafe-sdk-headers",
 ]
 
 [[package]]
