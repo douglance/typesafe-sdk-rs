@@ -12,6 +12,9 @@ categories.workspace = true
 description = "The TypeSafe error taxonomy."
 
 [dependencies]
+serde_json.workspace = true
+thiserror.workspace = true
+typesafe-sdk-headers.workspace = true
 
 [lints]
 workspace = true
