@@ -12,6 +12,9 @@ categories.workspace = true
 description = "The HTTP transport seam and its reqwest implementation."
 
 [dependencies]
+async-trait.workspace = true
+reqwest.workspace = true
+tokio.workspace = true
 typesafe-sdk-error.workspace = true
 typesafe-sdk-headers.workspace = true
 

@@ -12,9 +12,13 @@ categories.workspace = true
 description = "Client configuration, validation and precedence."
 
 [dependencies]
-typesafe-sdk-error.workspace = true
 typesafe-sdk-env.workspace = true
+typesafe-sdk-error.workspace = true
+typesafe-sdk-headers.workspace = true
 typesafe-sdk-log.workspace = true
+typesafe-sdk-retry.workspace = true
+
+[dev-dependencies]
 typesafe-sdk-retry.workspace = true
 
 [lints]

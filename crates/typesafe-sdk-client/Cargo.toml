@@ -12,6 +12,10 @@ categories.workspace = true
 description = "The TypeSafe client."
 
 [dependencies]
+indexmap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
 typesafe-sdk-answers.workspace = true
 typesafe-sdk-config.workspace = true
 typesafe-sdk-error.workspace = true
@@ -22,6 +26,11 @@ typesafe-sdk-models.workspace = true
 typesafe-sdk-questions.workspace = true
 typesafe-sdk-retry.workspace = true
 typesafe-sdk-runtime.workspace = true
+
+[dev-dependencies]
+typesafe-sdk-env.workspace = true
+typesafe-sdk-retry.workspace = true
+tokio = { workspace = true, features = ["macros", "rt", "test-util"] }
 
 [lints]
 workspace = true
