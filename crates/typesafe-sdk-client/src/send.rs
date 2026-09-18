@@ -2,6 +2,7 @@
 
 use typesafe_sdk_config::Config;
 use typesafe_sdk_error::Result;
+use typesafe_sdk_headers::{Headers, redact};
 use typesafe_sdk_http::{Method, RawResponse, Request, Transport};
 use typesafe_sdk_log::Level;
 use typesafe_sdk_retry::RetryPolicy;
@@ -45,14 +46,44 @@ pub(crate) async fn send(
         policy: &policy,
         tag: &tag,
     };
-    attempt::run(transport, &plan, |attempt| Request {
-        method: call.method,
-        url: url.clone(),
-        headers: assemble(config, &call.options.headers, call.body.is_some(), attempt),
-        body: call.body.clone(),
-        timeout_ms,
+    let response = attempt::run(transport, &plan, |attempt| {
+        let headers = assemble(config, &call.options.headers, call.body.is_some(), attempt);
+        config.logger.log(Level::Debug, || {
+            format!("{tag} -> headers {}", safe(&headers))
+        });
+        Request {
+            method: call.method,
+            url: url.clone(),
+            headers,
+            body: call.body.clone(),
+            timeout_ms,
+        }
     })
-    .await
+    .await?;
+
+    trace(config, &tag, &response);
+    Ok(response)
+}
+
+/// Records the request and response in full, with credentials masked.
+///
+/// Header values are redacted rather than omitted, because knowing that an
+/// `Authorization` header was present and which scheme it used is exactly what
+/// makes an auth failure diagnosable. Bodies are logged unredacted: they are
+/// the caller's own text, and masking them would make the log useless.
+fn trace(config: &Config, tag: &str, response: &RawResponse) {
+    config.logger.log(Level::Debug, || {
+        format!("{tag} <- {} {}", response.status, response.body)
+    });
+}
+
+/// Renders headers for a log line, with credentials masked.
+fn safe(headers: &Headers) -> String {
+    headers
+        .iter()
+        .map(|(name, value)| format!("{name}: {}", redact(name, value)))
+        .collect::<Vec<_>>()
+        .join(", ")
 }
 
 /// The policy for this call: the per-call one when given, the client's otherwise.
