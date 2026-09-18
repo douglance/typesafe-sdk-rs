@@ -1,0 +1,1 @@
+//! The TypeSafe error taxonomy.

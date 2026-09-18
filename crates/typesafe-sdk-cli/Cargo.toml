@@ -1,0 +1,20 @@
+[package]
+name = "typesafe-sdk-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "The `typesafe` command-line interface."
+
+[dependencies]
+typesafe-sdk-cmd-ask.workspace = true
+typesafe-sdk-cmd-doctor.workspace = true
+typesafe-sdk-cmd-models.workspace = true
+
+[lints]
+workspace = true

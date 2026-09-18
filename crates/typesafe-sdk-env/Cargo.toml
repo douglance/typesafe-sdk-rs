@@ -1,0 +1,17 @@
+[package]
+name = "typesafe-sdk-env"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Environment variable names and precedence."
+
+[dependencies]
+
+[lints]
+workspace = true

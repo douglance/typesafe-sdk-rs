@@ -1,0 +1,19 @@
+[package]
+name = "typesafe-sdk-log"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Log levels, filtering and the console sink."
+
+[dependencies]
+typesafe-sdk-error.workspace = true
+typesafe-sdk-headers.workspace = true
+
+[lints]
+workspace = true

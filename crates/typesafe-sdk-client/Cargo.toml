@@ -1,0 +1,27 @@
+[package]
+name = "typesafe-sdk-client"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "The TypeSafe client."
+
+[dependencies]
+typesafe-sdk-answers.workspace = true
+typesafe-sdk-config.workspace = true
+typesafe-sdk-error.workspace = true
+typesafe-sdk-headers.workspace = true
+typesafe-sdk-http.workspace = true
+typesafe-sdk-log.workspace = true
+typesafe-sdk-models.workspace = true
+typesafe-sdk-questions.workspace = true
+typesafe-sdk-retry.workspace = true
+typesafe-sdk-runtime.workspace = true
+
+[lints]
+workspace = true

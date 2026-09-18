@@ -1,0 +1,20 @@
+[package]
+name = "typesafe-sdk-derive"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Derive macro turning a struct into typed questions."
+
+[lib]
+proc-macro = true
+
+[dependencies]
+
+[lints]
+workspace = true

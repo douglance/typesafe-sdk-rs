@@ -1,0 +1,18 @@
+[package]
+name = "typesafe-sdk-retry"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "The retry policy, backoff and Retry-After parsing."
+
+[dependencies]
+typesafe-sdk-error.workspace = true
+
+[lints]
+workspace = true
