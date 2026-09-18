@@ -11,10 +11,20 @@ keywords.workspace = true
 categories.workspace = true
 description = "The `typesafe` command-line interface."
 
+[[bin]]
+name = "typesafe"
+path = "src/main.rs"
+
 [dependencies]
+incurs = { workspace = true, features = ["mcp"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 typesafe-sdk-cmd-ask.workspace = true
 typesafe-sdk-cmd-doctor.workspace = true
 typesafe-sdk-cmd-models.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 
 [lints]
 workspace = true
