@@ -12,6 +12,9 @@ categories.workspace = true
 description = "The question vocabulary: noul, choice and score."
 
 [dependencies]
+indexmap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
 typesafe-sdk-error.workspace = true
 
 [lints]

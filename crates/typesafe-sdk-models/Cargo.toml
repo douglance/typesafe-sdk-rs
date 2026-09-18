@@ -12,6 +12,8 @@ categories.workspace = true
 description = "Model cards and the models listing."
 
 [dependencies]
+serde.workspace = true
+serde_json.workspace = true
 typesafe-sdk-error.workspace = true
 
 [lints]
