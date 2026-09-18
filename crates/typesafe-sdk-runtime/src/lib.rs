@@ -62,8 +62,11 @@ mod tests {
         assert!(!os.is_empty() && !arch.is_empty());
     }
 
+    /// Comparing the string to itself would pass for any deterministic
+    /// function. What is actually claimed is that the value is computed once,
+    /// so this checks both calls hand back the same allocation.
     #[test]
-    fn it_is_stable_across_calls() {
-        assert_eq!(describe(), describe());
+    fn it_is_computed_once_and_reused() {
+        assert!(std::ptr::eq(describe(), describe()));
     }
 }

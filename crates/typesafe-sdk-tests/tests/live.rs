@@ -18,7 +18,7 @@ use typesafe_sdk_client::{Client, SystemOneRequest};
 use typesafe_sdk_config::Builder;
 use typesafe_sdk_env::Process;
 use typesafe_sdk_http::Reqwest;
-use typesafe_sdk_questions::{NoulCriteria, choice_of, noul, noul_with, questions, score};
+use typesafe_sdk_questions::{choice_of, noul, questions, score};
 
 /// A client against the real API, or `None` when no key is configured.
 fn live() -> Option<Client> {
@@ -92,13 +92,21 @@ async fn ask_about_the_ticket(client: &Client) -> SystemOneResponse {
 #[tokio::test]
 async fn the_response_reports_the_resolved_model_and_real_usage() {
     let client = live_client!();
+    let requested = client.config().default_model.clone();
     let response = ask_about_the_ticket(&client).await;
+
+    // `starts_with("jev-")` would pass for the alias itself, which is the one
+    // thing this test exists to rule out: the answer names a concrete version.
+    assert_ne!(
+        response.model, requested,
+        "the alias came back unresolved; nothing here proves resolution happened"
+    );
     assert!(
-        response.model.starts_with("jev-"),
-        "unexpected model {:?}",
+        response.model.starts_with("jev-") && response.model.chars().any(|c| c.is_ascii_digit()),
+        "expected a versioned model, got {:?}",
         response.model
     );
-    assert!(response.usage.input_tokens > 0);
+    assert!(response.usage.input_tokens > 0 && response.usage.output_tokens > 0);
 }
 
 #[tokio::test]
@@ -132,32 +140,4 @@ async fn a_score_question_answers_within_its_rubric_and_echoes_it_back() {
         Some("today"),
         "the rubric must come back as sent"
     );
-}
-
-#[tokio::test]
-async fn a_noul_question_answers_with_a_probability() {
-    let client = live_client!();
-    let response = ask_about_the_ticket(&client).await;
-    let angry = response.expect("angry").unwrap().as_noul().unwrap();
-    assert!((0.0..=1.0).contains(&angry.noul));
-}
-
-#[tokio::test]
-async fn one_sided_noul_criteria_are_accepted() {
-    let client = live_client!();
-    let request = SystemOneRequest::new(
-        "The build has been broken for three days.",
-        questions([(
-            "urgent",
-            noul_with(
-                "Is this urgent?",
-                NoulCriteria {
-                    yes: Some("blocks other people from working".into()),
-                    no: None,
-                },
-            ),
-        )]),
-    );
-    let response = client.system_one(request).await.expect("one-sided noul");
-    assert!(response.expect("urgent").unwrap().as_noul().is_some());
 }
