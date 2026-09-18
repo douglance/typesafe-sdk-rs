@@ -131,3 +131,30 @@ async fn retries_stop_once_the_budget_is_spent() {
     assert_eq!(error.status(), Some(503));
     assert_eq!(mock.attempts(), 3, "one attempt plus two retries");
 }
+
+/// The live test for this can only check the service accepted the request.
+/// What the SDK actually promises is that an unmodelled field reaches the wire
+/// unchanged, and only the request body shows that.
+#[tokio::test]
+async fn an_unmodelled_field_reaches_the_wire_verbatim() {
+    let body = r#"{"model":"m","answers":{},"usage":{"input_tokens":1,"output_tokens":1}}"#;
+    let (client, mock) = client_over(vec![Exchange::ok(body)], fast_retry(0));
+
+    let request = typesafe_sdk_client::SystemOneRequest::new(
+        "hi",
+        typesafe_sdk_questions::questions([("q", typesafe_sdk_questions::noul("Urgent?"))]),
+    )
+    .extra("future_option", serde_json::Value::Null)
+    .extra("trace_id", serde_json::Value::String("abc123".to_owned()));
+
+    client.system_one(request).await.unwrap();
+
+    let sent: serde_json::Value =
+        serde_json::from_str(mock.requests()[0].body.as_ref().unwrap()).unwrap();
+    assert_eq!(sent["future_option"], serde_json::Value::Null);
+    assert_eq!(sent["trace_id"], "abc123");
+    assert_eq!(
+        sent["model"], "jev-latest",
+        "the modelled fields survive too"
+    );
+}

@@ -28,6 +28,8 @@ typesafe-sdk-retry.workspace = true
 typesafe-sdk-runtime.workspace = true
 
 [dev-dependencies]
+serde_json.workspace = true
+typesafe-sdk-questions.workspace = true
 typesafe-sdk-env.workspace = true
 typesafe-sdk-retry.workspace = true
 tokio = { workspace = true, features = ["macros", "rt", "test-util"] }

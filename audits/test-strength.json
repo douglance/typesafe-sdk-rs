@@ -1,0 +1,5 @@
+{"passes_when_broken":{"type":"noul",
+ "instructions":"This is one Rust test. Imagine the behaviour it is named for were implemented incorrectly — it computes a wrong value, or a guarantee it claims is not upheld — while everything still compiles and every type is still correct. Would this test still pass?",
+ "criteria":{
+  "true":"Yes. Its assertions only check a type, that a value falls in a wide range, that something is non-empty or Some, or that no panic occurred — so a wrong but well-formed implementation satisfies them.",
+  "false":"No. At least one assertion pins something only the correct implementation produces: an exact value, an exact error or message, a pointer identity, a count, or an ordering between two different inputs."}}}

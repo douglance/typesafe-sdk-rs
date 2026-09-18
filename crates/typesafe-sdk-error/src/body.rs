@@ -54,8 +54,11 @@ mod tests {
     }
 
     #[test]
-    fn json_is_parsed() {
-        assert!(Body::parse(r#"{"a":1}"#).json().is_some());
+    fn json_is_parsed_into_the_value_it_describes() {
+        assert_eq!(
+            Body::parse(r#"{"a":1}"#).json(),
+            Some(&serde_json::json!({"a": 1}))
+        );
     }
 
     #[test]
