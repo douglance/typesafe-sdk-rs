@@ -3,7 +3,7 @@ members = ["crates/*", "xtask"]
 resolver = "3"
 
 [workspace.package]
-version = "0.6.1"
+version = "0.6.2"
 edition = "2024"
 rust-version = "1.98"
 license = "MIT"
@@ -48,19 +48,19 @@ redundant_pub_crate = "allow"
 
 [workspace.dependencies]
 # Internal crates. Listed here so the dependency graph is visible in one place.
-typesafe-sdk-answers   = { path = "crates/typesafe-sdk-answers",   version = "0.6.1" }
-typesafe-sdk-client    = { path = "crates/typesafe-sdk-client",    version = "0.6.1" }
-typesafe-sdk-config    = { path = "crates/typesafe-sdk-config",    version = "0.6.1" }
-typesafe-sdk-derive    = { path = "crates/typesafe-sdk-derive",    version = "0.6.1" }
-typesafe-sdk-env       = { path = "crates/typesafe-sdk-env",       version = "0.6.1" }
-typesafe-sdk-error     = { path = "crates/typesafe-sdk-error",     version = "0.6.1" }
-typesafe-sdk-headers   = { path = "crates/typesafe-sdk-headers",   version = "0.6.1" }
-typesafe-sdk-http      = { path = "crates/typesafe-sdk-http",      version = "0.6.1" }
-typesafe-sdk-log       = { path = "crates/typesafe-sdk-log",       version = "0.6.1" }
-typesafe-sdk-models    = { path = "crates/typesafe-sdk-models",    version = "0.6.1" }
-typesafe-sdk-questions = { path = "crates/typesafe-sdk-questions", version = "0.6.1" }
-typesafe-sdk-retry     = { path = "crates/typesafe-sdk-retry",     version = "0.6.1" }
-typesafe-sdk-runtime   = { path = "crates/typesafe-sdk-runtime",   version = "0.6.1" }
+typesafe-sdk-answers   = { path = "crates/typesafe-sdk-answers",   version = "0.6.2" }
+typesafe-sdk-client    = { path = "crates/typesafe-sdk-client",    version = "0.6.2" }
+typesafe-sdk-config    = { path = "crates/typesafe-sdk-config",    version = "0.6.2" }
+typesafe-sdk-derive    = { path = "crates/typesafe-sdk-derive",    version = "0.6.2" }
+typesafe-sdk-env       = { path = "crates/typesafe-sdk-env",       version = "0.6.2" }
+typesafe-sdk-error     = { path = "crates/typesafe-sdk-error",     version = "0.6.2" }
+typesafe-sdk-headers   = { path = "crates/typesafe-sdk-headers",   version = "0.6.2" }
+typesafe-sdk-http      = { path = "crates/typesafe-sdk-http",      version = "0.6.2" }
+typesafe-sdk-log       = { path = "crates/typesafe-sdk-log",       version = "0.6.2" }
+typesafe-sdk-models    = { path = "crates/typesafe-sdk-models",    version = "0.6.2" }
+typesafe-sdk-questions = { path = "crates/typesafe-sdk-questions", version = "0.6.2" }
+typesafe-sdk-retry     = { path = "crates/typesafe-sdk-retry",     version = "0.6.2" }
+typesafe-sdk-runtime   = { path = "crates/typesafe-sdk-runtime",   version = "0.6.2" }
 
 # Third party.
 anyhow = "1"

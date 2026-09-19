@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.6.2 (2026-09-19)
+
+### Changed
+
+- The README is a library README now. It shows how to build a `Client` — which
+  it never did, despite calling one in the first example — says which of the
+  thirteen crates a caller actually needs, documents the `Mock` transport for
+  testing without a network, and states the precondition for the tool being a
+  fit at all. Both code samples are compiled against the crates before release.
+
 ## v0.6.1 (2026-09-19)
 
 ### Changed
