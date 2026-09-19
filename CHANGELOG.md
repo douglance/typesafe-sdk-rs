@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.1 (2026-09-19)
+
+### Changed
+
+- Metadata and README now describe a library rather than a library plus a CLI.
+  No API changed; this exists so the published pages stop documenting commands
+  that live in another repository.
+
 ## Unreleased
 
 ### Removed

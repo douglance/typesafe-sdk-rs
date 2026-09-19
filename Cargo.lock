@@ -1093,7 +1093,7 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
 name = "typesafe-sdk-answers"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "indexmap",
  "serde",
@@ -1103,7 +1103,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-client"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "indexmap",
  "serde",
@@ -1124,7 +1124,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-config"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "typesafe-sdk-env",
  "typesafe-sdk-error",
@@ -1135,7 +1135,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-derive"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1144,11 +1144,11 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-env"
-version = "0.6.0"
+version = "0.6.1"
 
 [[package]]
 name = "typesafe-sdk-error"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "serde_json",
  "thiserror",
@@ -1157,7 +1157,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-headers"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "httpdate",
  "indexmap",
@@ -1165,7 +1165,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-http"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "async-trait",
  "reqwest",
@@ -1176,7 +1176,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-log"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "typesafe-sdk-error",
  "typesafe-sdk-headers",
@@ -1184,7 +1184,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-models"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "serde",
  "serde_json",
@@ -1193,7 +1193,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-questions"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "indexmap",
  "serde",
@@ -1203,7 +1203,7 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-retry"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "typesafe-sdk-error",
  "typesafe-sdk-headers",
@@ -1211,11 +1211,11 @@ dependencies = [
 
 [[package]]
 name = "typesafe-sdk-runtime"
-version = "0.6.0"
+version = "0.6.1"
 
 [[package]]
 name = "typesafe-sdk-tests"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "serde_json",
  "tokio",
@@ -1498,7 +1498,7 @@ checksum = "3ad82d2a33cdc9674dc7465672f271e096168fcdbe0f799d9e6db8c5892679dc"
 
 [[package]]
 name = "xtask"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "anyhow",
  "proc-macro2",
