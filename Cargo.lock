@@ -2759,7 +2759,10 @@ name = "typesafe-sdk-cmd-kit"
 version = "0.6.0"
 dependencies = [
  "incurs",
+ "schemars",
+ "serde",
  "serde_json",
+ "typesafe-sdk-answers",
  "typesafe-sdk-client",
  "typesafe-sdk-config",
  "typesafe-sdk-env",
