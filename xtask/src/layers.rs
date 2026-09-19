@@ -28,17 +28,10 @@ pub(crate) const LAYERS: &[(&str, u8)] = &[
     ("typesafe-sdk-config", 3),
     // 4 — the SDK facade consumers depend on.
     ("typesafe-sdk-client", 4),
-    // 5 — command surface, one crate per command.
+    // 5 — tools built on the SDK rather than part of it.
     ("typesafe-sdk-lint", 5),
     ("typesafe-sdk-lsp", 5),
-    ("typesafe-sdk-cmd-kit", 5),
-    ("typesafe-sdk-cmd-models", 5),
-    ("typesafe-sdk-cmd-ask", 5),
-    ("typesafe-sdk-cmd-classify", 5),
-    ("typesafe-sdk-cmd-doctor", 5),
-    ("typesafe-sdk-cmd-lint", 5),
-    // 6 — binaries and cross-crate tests.
-    ("jevon", 6),
+    // 6 — cross-crate tests and the gates themselves.
     ("typesafe-sdk-tests", 6),
     ("xtask", 6),
 ];
@@ -75,8 +68,8 @@ mod tests {
     }
 
     #[test]
-    fn the_client_sits_below_the_commands() {
-        assert!(layer_of("typesafe-sdk-client") < layer_of("typesafe-sdk-cmd-ask"));
+    fn the_client_sits_below_the_tools_built_on_it() {
+        assert!(layer_of("typesafe-sdk-client") < layer_of("typesafe-sdk-lint"));
     }
 
     #[test]

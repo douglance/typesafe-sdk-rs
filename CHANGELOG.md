@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Removed
+
+- The command crates and the `jev` binary, which moved to
+  [douglance/jevon](https://github.com/douglance/jevon) and now consume this
+  SDK from crates.io. `cargo install jevon` is unchanged; this repository is
+  the library only.
+
 ### Changed
 
 - Reimplemented in Rust as a workspace of small crates, with a `typesafe`
