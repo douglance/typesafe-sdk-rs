@@ -1,20 +1,24 @@
 # TypeSafe Rust SDK
 
-Rust SDK and command-line interface for the [TypeSafe](https://typesafe.ai) API.
+Rust SDK for the [TypeSafe](https://typesafe.ai) API.
 
 Ask questions about a piece of text and get answers with probabilities attached,
 instead of a string you have to parse.
 
-## Quickstart
+The command-line interface lives in its own repository,
+[douglance/jevon](https://github.com/douglance/jevon), and consumes this SDK
+from crates.io:
 
 ```sh
 cargo install jevon
-export TYPESAFE_API_KEY=...
-jev ask "I was charged twice, please fix this" \
-  --noul "What is this ticket about?" --choice billing --choice technical
 ```
 
-As a library:
+## Quickstart
+
+```sh
+cargo add typesafe-sdk-client typesafe-sdk-questions
+export TYPESAFE_API_KEY=...
+```
 
 ```rust
 use typesafe_sdk_client::{Client, SystemOneRequest};
@@ -66,7 +70,8 @@ match Ticket::answers(&response)?.category {
 | `TYPESAFE_LOG_LEVEL` | `warn` | `debug`, `info`, `warn`, `error`, `off`. |
 
 An explicit argument wins over the environment, which wins over the default. A
-variable set to whitespace counts as unset. Run `jev doctor` to see what resolved and what is missing.
+variable set to whitespace counts as unset. `jev doctor`, from the CLI, shows
+what resolved and what is missing.
 
 Requests retry twice by default, on 408, 429 and 5xx as well as connection
 failures and timeouts, with exponential backoff from 500ms to a 5s cap. A
@@ -76,11 +81,8 @@ the headers.
 
 ## Agents
 
-`jev mcp add` registers the binary as an MCP server and `jev skills add` writes
-a skill per command. Both default to global. The MCP entry carries no
-environment, so the agent must already have `TYPESAFE_API_KEY` in scope —
-deliberately, because a key does not belong in an agent config file. Without
-one every call returns "No API key was provided" rather than failing obscurely.
+Agent surfaces — MCP, shell completions and skill files — belong to the CLI.
+See [douglance/jevon](https://github.com/douglance/jevon).
 
 ## Layout
 
@@ -94,9 +96,14 @@ build.
 2  derive                                   the proc macro
 3  http · config
 4  client                                   the SDK
-5  cmd-kit · cmd-ask · cmd-models · cmd-doctor
-6  jevon (cli) · tests
+5  lint · lsp                               tools built on it
+6  tests                                    cross-crate conformance
 ```
+
+The command crates and the `jev` binary used to sit above layer 4. They now
+live in [douglance/jevon](https://github.com/douglance/jevon) and depend on
+this SDK from crates.io, which means the CLI is held to the API that ships
+rather than to whatever happens to be in this tree.
 
 ## Development
 
